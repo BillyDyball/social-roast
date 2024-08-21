@@ -1,36 +1,100 @@
 import { useState } from "react";
-import { getProfile } from "./api";
-import { AppBskyActorGetProfile } from "@atproto/api";
+import { generateRoast } from "./api";
+import {
+  ChatBubbleLeftIcon,
+  ArrowPathRoundedSquareIcon,
+  HeartIcon,
+  EllipsisHorizontalIcon,
+} from "@heroicons/react/24/outline";
+
+const defaultContent = "This project was made by Billy Dyball :)";
 
 function App() {
-  const [actor, setActor] = useState<string>("");
-  const [response, setResponse] = useState<AppBskyActorGetProfile.Response>();
+  const [actor, setActor] = useState<string>("billydyball.bsky.social");
+  const [roast, setRoast] = useState<string>("");
 
+  // billydyball.bsky.social
   const handleRoast = async () => {
-    const { response, error } = await getProfile(actor);
-    if (response) {
-      setResponse(response);
+    const [response, error] = await generateRoast(actor);
+
+    if (!response || error) {
+      console.error(error);
+      return;
     }
-    console.log(response, error);
+
+    console.log(response);
+    setRoast(response.text());
   };
 
+  const doSomething = () => {};
+
   return (
-    <>
-      <div>
+    <div className="flex justify-center pt-10">
+      <div className="flex flex-col items-center gap-6 w-full sm:w-[600px]">
         <h1>Social Roast</h1>
 
-        <label htmlFor="">Blue Sky</label>
-        <input
-          type="text"
-          name=""
-          id=""
-          value={actor}
-          onChange={(e) => setActor(e.target.value)}
-        />
-        <button onClick={handleRoast}>Get Profile</button>
+        <div className="flex flex-col w-full sm:flex-row items-center gap-3">
+          <label htmlFor="" className="whitespace-nowrap">
+            Blue Sky
+          </label>
+          <input
+            className="flex-1"
+            placeholder="example.bsky.social"
+            type="text"
+            name=""
+            id=""
+            value={actor}
+            onChange={(e) => setActor(e.target.value)}
+          />
+          <button onClick={handleRoast} className="whitespace-nowrap">
+            Get Profile
+          </button>
+        </div>
+
+        <div
+          className="flex flex-1 flex-nowrap border border-gray-700 pb-1 pt-2.5 pl-2.5 pr-4 gap-2.5 min-h-40  cursor-pointer"
+          onClick={doSomething}
+        >
+          <div className="pl-2">
+            <div className="bg-red-600 h-12 w-12 rounded-full"></div>
+          </div>
+          <div className="flex flex-1 flex-col ">
+            <div className="flex items-center gap-1.5">
+              <span className="font-bold text-nowrap">L H G Λ Я T</span>
+              <span className="text-gray-400">@lhgart.bsky.social</span>
+              <span className="text-gray-400">·</span>
+              <span className="text-gray-400">Now</span>
+            </div>
+            <div className="flex-1">{roast ? roast : defaultContent}</div>
+            <div className="flex">
+              <span className="flex flex-1 text-gray-400">
+                <div>
+                  <ChatBubbleLeftIcon className="p-1 h-7 w-7" />
+                </div>
+                <div>3</div>
+              </span>
+              <span className="flex flex-1 text-gray-400">
+                <div>
+                  <ArrowPathRoundedSquareIcon className="p-1 h-7 w-7" />
+                </div>
+                <div>3</div>
+              </span>
+              <span className="flex flex-1 text-gray-400">
+                <div>
+                  <HeartIcon className="p-1 h-7 w-7" />
+                </div>
+                <div>3</div>
+              </span>
+              <span className="flex flex-1 text-gray-400">
+                <div>
+                  <EllipsisHorizontalIcon className="p-1 h-7 w-7 text-gray-400" />
+                </div>
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
-      <div>{response ? JSON.stringify(response.data) : "No Data :("}</div>
-    </>
+    </div>
   );
 }
 
