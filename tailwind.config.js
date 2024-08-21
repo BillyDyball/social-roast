@@ -22,6 +22,9 @@ export default {
         ],
         monospace: [`SF Mono`, `ui-monospace`, `Monaco`, "Monospace"],
       },
+      colors: {
+        "dark-blue": "#161e27",
+      },
     },
   },
   plugins: [],
