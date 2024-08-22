@@ -3,6 +3,7 @@ import {
   EnhancedGenerateContentResponse,
   GoogleGenerativeAI,
 } from "@google/generative-ai";
+import moment from "moment";
 
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GEMINI_KEY);
 const model = genAI.getGenerativeModel({
@@ -45,14 +46,15 @@ export const generateRoast = async (actor: string): Promise<GenResponse> => {
       return [null, bskyError];
     }
 
-    const bskyProfile = bskyResponse.data;
-    console.log("profile", bskyProfile);
+    const { handle, createdAt, followersCount, description } =
+      bskyResponse.data;
 
-    const prompt = `Tell me a roast about a BlueSky user named ${
-      bskyProfile.handle
-    } who joined ${bskyProfile.createdAt} has ${
-      bskyProfile.followersCount || 0
-    } followers.`;
+    const prompt = [
+      `Tell me a roast about a BlueSky user named ${handle}`,
+      `who joined ${moment(createdAt).format("L")}`,
+      `and has ${followersCount || 0} followers.`,
+      description ? `Their description says "${description}".` : "",
+    ].join(" ");
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
