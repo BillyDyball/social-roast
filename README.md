@@ -1,5 +1,7 @@
 # Social Roast
 
+![Soical Roast Homepage](https://github.com/BillyDyball/social-roast/blob/main/src/assets/homepage.png?raw=true)
+
 An app that looks at peoples [BlueSky](https://bsky.app/) profiles and roasts them
 
 ## Getting Stated
